@@ -68,7 +68,5 @@ Tiến trình lưu trong `localStorage` (khóa `brickkeep-v1`).
 ## GitHub
 
 - Repo: https://github.com/haianhhadang-collab/brick-keep (nhánh `main`).
-- Bản web chạy từ nhánh `gh-pages`, là nội dung thư mục `www/`. Sau khi sửa game, cập nhật bằng:
-  `git subtree split --prefix www -b gh-pages` rồi `git push -f origin gh-pages`.
-- APK gắn vào bản phát hành (Releases): `gh release create vX.Y BrickKeep.apk`.
-- Chưa có GitHub Actions: token của máy thiếu quyền `workflow`. Muốn thêm thì chạy `gh auth refresh -s workflow` rồi đẩy lại hai tệp workflow theo mẫu `word-arena/.github/workflows`.
+- GitHub Actions: mỗi lần đẩy lên `main` thì tự build APK (tải ở mục Artifacts của lượt chạy) và tự cập nhật bản web trên GitHub Pages.
+- Đẩy một thẻ dạng `v*` (ví dụ `git tag v1.1` rồi `git push origin v1.1`): APK được đính vào bản phát hành của thẻ đó.
