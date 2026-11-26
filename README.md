@@ -4,6 +4,11 @@ Game thủ thành theo làn (cùng thể loại Plants vs Zombies) cho trẻ h�
 
 Nhân vật là tượng khối gạch tự vẽ bằng canvas: người đầu trụ có núm, tay chữ C. Cảnh 2,5D nhiều lớp, mượn không khí cổ tích của Trine 4 (thông xoắn, nắng xiên, rừng nấm phát sáng). Không dùng tên hay logo LEGO, không chép nhân vật hay quái của game gốc.
 
+## Chơi ngay
+
+- Bản web: https://haianhhadang-collab.github.io/brick-keep/
+- Tải APK Android: https://github.com/haianhhadang-collab/brick-keep/releases/latest
+
 ## Chạy thử
 
 ```
@@ -59,3 +64,11 @@ Tiến trình lưu trong `localStorage` (khóa `brickkeep-v1`).
 - `android/`: vỏ WebView (package `vn.edu.brickkeep`, minSdk 26), game phục vụ qua `https://appassets.androidplatform.net/www/` để WebRTC chạy được; đọc to bằng `AndroidTTS`; nút Quay lại gọi `window.__back`.
 - Build: `powershell -File brick-keep/build-apk.ps1` → `BrickKeep.apk` ở thư mục gốc dự án (dùng ổ ảo G/H/I/J vì đường dẫn có dấu).
 - CSS có phần dự phòng cho WebView đời cũ (Chrome 83 trên Android 11).
+
+## GitHub
+
+- Repo: https://github.com/haianhhadang-collab/brick-keep (nhánh `main`).
+- Bản web chạy từ nhánh `gh-pages`, là nội dung thư mục `www/`. Sau khi sửa game, cập nhật bằng:
+  `git subtree split --prefix www -b gh-pages` rồi `git push -f origin gh-pages`.
+- APK gắn vào bản phát hành (Releases): `gh release create vX.Y BrickKeep.apk`.
+- Chưa có GitHub Actions: token của máy thiếu quyền `workflow`. Muốn thêm thì chạy `gh auth refresh -s workflow` rồi đẩy lại hai tệp workflow theo mẫu `word-arena/.github/workflows`.
