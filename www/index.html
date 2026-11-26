@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0E2230">
+<title>Brick Keep – Giữ thành bằng từ tiếng Anh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<!-- Phông tải sau, không chặn màn hình (không có mạng thì dùng phông máy) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Nền động dùng chung cho các màn hình menu -->
+<canvas id="menu-bg"></canvas>
+
+<!-- Màn hình chính -->
+<section id="scr-home" class="screen active">
+  <div class="home-wrap">
+    <div class="logo">
+      <div class="logo-top">BRICK KEEP</div>
+      <div class="logo-sub">Word Defenders</div>
+      <p class="logo-vi">Tìm từ tiếng Anh · xây quân · giữ lâu đài</p>
+    </div>
+    <div class="home-menu">
+      <button class="big-btn gold" id="btn-adventure"><span class="ic">⚔️</span><b>Phiêu lưu</b><small>1 người · đấu đợt quái của máy</small></button>
+      <button class="big-btn blue" id="btn-coop"><span class="ic">🤝</span><b>Cùng phe</b><small>2 người, mỗi người 1 máy · đấu máy</small></button>
+      <button class="big-btn red" id="btn-versus"><span class="ic">🆚</span><b>Đối kháng</b><small>2 người, 2 máy · Hiệp sĩ đấu Bóng đêm</small></button>
+      <div class="home-row">
+        <button class="pill" id="btn-topic"><span id="lbl-topic-ic">🐶</span> Chủ đề: <b id="lbl-topic">Con vật</b></button>
+        <button class="pill" id="btn-almanac">📖 Sổ tay</button>
+        <button class="pill" id="btn-settings">⚙️ Cài đặt</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Bản đồ màn chơi -->
+<section id="scr-map" class="screen">
+  <div class="panel wide">
+    <header class="ph"><button class="back" data-go="home">‹</button><h2>Chọn màn</h2><span class="ph-note" id="map-note"></span></header>
+    <div id="map-worlds" class="worlds"></div>
+  </div>
+</section>
+
+<!-- Chọn chủ đề -->
+<section id="scr-topic" class="screen">
+  <div class="panel wide">
+    <header class="ph"><button class="back" data-go="home">‹</button><h2>Chủ đề từ vựng</h2><span class="ph-note">Từ ẩn trên bảng chữ lấy từ chủ đề này</span></header>
+    <div id="topic-grid" class="topic-grid"></div>
+  </div>
+</section>
+
+<!-- Sổ tay nhân vật -->
+<section id="scr-almanac" class="screen">
+  <div class="panel wide">
+    <header class="ph"><button class="back" data-go="home">‹</button><h2>Sổ tay</h2><span class="ph-note">Quân hiệp sĩ và quái bóng đêm</span></header>
+    <div class="alm-scroll"><h3>Phe Hiệp sĩ</h3><div id="alm-heroes" class="alm-grid"></div><h3>Phe Bóng đêm</h3><div id="alm-mons" class="alm-grid"></div></div>
+  </div>
+</section>
+
+<!-- Cài đặt -->
+<section id="scr-settings" class="screen">
+  <div class="panel small">
+    <header class="ph"><button class="back" data-go="home">‹</button><h2>Cài đặt</h2></header>
+    <div class="set-list">
+      <label class="tog"><input type="checkbox" id="set-music"><span></span>Nhạc nền</label>
+      <label class="tog"><input type="checkbox" id="set-sfx"><span></span>Âm thanh hiệu ứng</label>
+      <label class="tog"><input type="checkbox" id="set-speak"><span></span>Đọc to từ vừa tìm được</label>
+      <label class="tog"><input type="checkbox" id="set-en"><span></span>Dễ: hiện sẵn từ tiếng Anh cần tìm</label>
+      <label class="field">Tên của bé<input id="set-name" maxlength="12" placeholder="Bé"></label>
+      <button class="pill danger" id="btn-reset">Xóa tiến trình (chơi lại từ màn 1)</button>
+    </div>
+  </div>
+</section>
+
+<!-- Phòng chơi 2 máy -->
+<section id="scr-lobby" class="screen">
+  <div class="panel mid">
+    <header class="ph"><button class="back" id="btn-lobby-back">‹</button><h2 id="lobby-title">Cùng phe</h2></header>
+    <p class="lobby-desc" id="lobby-desc"></p>
+    <div id="lobby-choose" class="lobby-choose">
+      <button class="big-btn gold" id="btn-create"><span class="ic">🏰</span><b>Tạo phòng</b><small>Nhận mã 4 chữ, đưa bạn kia</small></button>
+      <div class="join-box"><input id="in-code" maxlength="4" placeholder="MÃ" autocomplete="off" spellcheck="false"><button class="big-btn blue" id="btn-join"><b>Vào phòng</b></button></div>
+    </div>
+    <div id="lobby-room" class="hidden">
+      <div class="code-row">Mã phòng <div id="code-tiles" class="code-tiles"></div></div>
+      <div id="lobby-players" class="lobby-players"></div>
+      <div id="lobby-host-opts" class="hidden">
+        <div class="opt-row" id="row-level"><span id="lbl-optname">Màn</span>
+          <div class="stepper"><button class="step" id="lv-down">‹</button><b id="lbl-lv">1</b><button class="step" id="lv-up">›</button></div></div>
+        <div class="opt-row" id="row-role"><span>Phe của bạn</span>
+          <div class="seg"><button id="role-hero" class="on">🛡️ Hiệp sĩ</button><button id="role-shadow">👹 Bóng đêm</button></div></div>
+        <button class="big-btn gold" id="btn-start" disabled><b>Bắt đầu</b></button>
+      </div>
+      <p id="lobby-wait" class="lobby-wait hidden">Chờ chủ phòng bấm Bắt đầu…</p>
+    </div>
+    <p id="lobby-status" class="lobby-status"></p>
+  </div>
+</section>
+
+<!-- Màn chơi -->
+<section id="scr-game" class="screen">
+  <div class="game">
+    <div class="field-wrap">
+      <canvas id="field"></canvas>
+      <div class="hud-top">
+        <div class="bank" id="bank"><span class="brick-ic"></span><b id="bricks">0</b></div>
+        <div class="cards" id="cards"></div>
+        <button class="tool" id="tool-hammer" title="Gỡ quân">🔨</button>
+      </div>
+      <div class="hud-right">
+        <div class="prog"><div class="prog-fill" id="prog-fill"></div><div id="prog-flags"></div><span class="prog-head" id="prog-head"></span></div>
+        <div class="lvl-name" id="lvl-name"></div>
+        <button class="round-btn" id="btn-pause" title="Tạm dừng">❚❚</button>
+      </div>
+      <div class="partner hidden" id="partner"></div>
+      <div class="banner" id="banner"></div>
+      <div class="coach hidden" id="coach"></div>
+    </div>
+    <aside class="side">
+      <div class="side-head">
+        <div class="preview" id="preview">&nbsp;</div>
+        <div class="side-btns">
+          <button class="round-btn sm" id="btn-hint" title="Gợi ý chữ đầu">💡</button>
+          <button class="round-btn sm" id="btn-shuffle" title="Bảng chữ mới">↻</button>
+        </div>
+      </div>
+      <div class="board-frame"><div class="board" id="board"></div></div>
+      <div class="clues" id="clues"></div>
+    </aside>
+  </div>
+  <div class="overlay hidden" id="pause">
+    <div class="panel small center">
+      <h2>Tạm dừng</h2>
+      <button class="big-btn gold" id="btn-resume"><b>Chơi tiếp</b></button>
+      <button class="big-btn blue" id="btn-restart"><b>Chơi lại màn</b></button>
+      <button class="big-btn red" id="btn-quit"><b>Về màn chính</b></button>
+    </div>
+  </div>
+  <div class="overlay hidden" id="result">
+    <div class="panel small center">
+      <h2 id="res-title">Thắng rồi!</h2>
+      <p id="res-sub"></p>
+      <div id="res-unlock" class="unlock hidden"></div>
+      <div id="res-words" class="res-words"></div>
+      <button class="big-btn gold" id="btn-next"><b>Màn tiếp</b></button>
+      <button class="big-btn blue" id="btn-again"><b>Chơi lại</b></button>
+      <button class="big-btn red" id="btn-home2"><b>Về màn chính</b></button>
+    </div>
+  </div>
+</section>
+
+<div class="fly-layer" id="fly"></div>
+<div class="rotate-hint" id="rotate-hint">Xoay ngang máy để chơi rộng hơn ↻</div>
+
+<script src="words.js"></script>
+<script src="data.js"></script>
+<script src="board.js"></script>
+<script src="sim.js"></script>
+<script src="audio.js"></script>
+<script src="art.js"></script>
+<script src="render.js"></script>
+<script src="lib/peerjs.min.js"></script>
+<script src="main.js"></script>
+</body>
+</html>

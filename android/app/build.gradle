@@ -1,0 +1,44 @@
+plugins {
+    id "com.android.application"
+}
+
+android {
+    namespace "vn.edu.brickkeep"
+    compileSdk 36
+
+    defaultConfig {
+        applicationId "vn.edu.brickkeep"
+        minSdk 26
+        targetSdk 36
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            // Bản release ký bằng khóa debug để cài thử được ngay; khi lên Google Play thì thay bằng khóa riêng.
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    // Bản game web (brick-keep/www) được chép vào assets/www khi build
+    sourceSets {
+        main {
+            assets.srcDirs += ["build/generated/wwwAssets"]
+        }
+    }
+}
+
+tasks.register("copyWww", Copy) {
+    from(rootProject.file("../www")) {
+        exclude "**/*.map"
+    }
+    into(layout.buildDirectory.dir("generated/wwwAssets/www"))
+}
+tasks.named("preBuild") { dependsOn("copyWww") }

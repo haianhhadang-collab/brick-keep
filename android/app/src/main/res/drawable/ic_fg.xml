@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Biểu tượng Brick Keep: đầu nhân vật khối gạch (có núm trên đầu) đứng sau một viên gạch đỏ. Tự vẽ. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- quầng sáng -->
+    <path android:fillColor="#33FFE08A" android:pathData="M54,50m-34,0a34,34 0,1 1,68 0a34,34 0,1 1,-68 0" />
+    <!-- núm trên đầu -->
+    <path android:fillColor="#E0B23A" android:pathData="M45,24h18v7h-18z" />
+    <path android:fillColor="#FFE07A" android:pathData="M45,24a9,2.5 0,1 1,18 0a9,2.5 0,1 1,-18 0z" />
+    <!-- đầu -->
+    <path android:fillColor="#F6CF57" android:pathData="M40,38a8,8 0,0 1,8,-8h12a8,8 0,0 1,8,8v18a8,8 0,0 1,-8,8h-12a8,8 0,0 1,-8,-8z" />
+    <path android:fillColor="#FFE58A" android:pathData="M43,38a5,5 0,0 1,5,-5h3v28h-3a5,5 0,0 1,-5,-5z" />
+    <path android:fillColor="#C99A2E" android:pathData="M64,33a5,5 0,0 1,4,5v18a5,5 0,0 1,-4,5z" />
+    <!-- mắt, miệng -->
+    <path android:fillColor="#1E1A18" android:pathData="M49,43m-2.4,0a2.4,2.4 0,1 1,4.8 0a2.4,2.4 0,1 1,-4.8 0M60,43m-2.4,0a2.4,2.4 0,1 1,4.8 0a2.4,2.4 0,1 1,-4.8 0" />
+    <path android:strokeColor="#1E1A18" android:strokeWidth="2" android:strokeLineCap="round" android:fillColor="#00000000" android:pathData="M48.5,50.5q6,5 12,0" />
+    <!-- viên gạch đỏ có 2 núm -->
+    <path android:fillColor="#A8301F" android:pathData="M30,66h48v18h-48z" />
+    <path android:fillColor="#D8402E" android:pathData="M30,64h48v16h-48z" />
+    <path android:fillColor="#B8362A" android:pathData="M38,58h10v6h-10zM60,58h10v6h-10z" />
+    <path android:fillColor="#F06A50" android:pathData="M38,58a5,1.8 0,1 1,10 0a5,1.8 0,1 1,-10 0zM60,58a5,1.8 0,1 1,10 0a5,1.8 0,1 1,-10 0z" />
+    <path android:fillColor="#FF9A80" android:pathData="M32,66h20v2h-20z" />
+</vector>
