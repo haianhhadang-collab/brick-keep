@@ -69,4 +69,4 @@ Tiến trình lưu trong `localStorage` (khóa `brickkeep-v1`).
 
 - Repo: https://github.com/haianhhadang-collab/brick-keep (nhánh `main`).
 - GitHub Actions: mỗi lần đẩy lên `main` thì tự build APK (tải ở mục Artifacts của lượt chạy) và tự cập nhật bản web trên GitHub Pages.
-- Đẩy một thẻ dạng `v*` (ví dụ `git tag v1.1` rồi `git push origin v1.1`): APK được đính vào bản phát hành của thẻ đó.
+- APK do Actions build ký bằng khóa debug của máy chủ GitHub, khác khóa ở máy nhà, nên không cài đè được lên bản đã cài từ Releases; chỉ dùng để thử. Bản phát hành (Releases) đính APK build ở máy nhà: `gh release create vX.Y BrickKeep.apk`.
