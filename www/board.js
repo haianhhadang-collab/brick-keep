@@ -7,7 +7,7 @@
 
   function WordBoard(opts) {
     this.o = opts;
-    this.size = 6;
+    this.size = 6; // đổi theo màn khi sinh bảng (D.boardSpec)
     this.grid = []; this.words = []; this.sel = []; this.anchor = null; this.dragging = false;
     this.el = opts.gridEl; this.cluesEl = opts.cluesEl;
     this.colors = ["#F6C445", "#7ED4F2", "#F59AC0", "#9EE07A", "#C9A5FF", "#FFAE6B", "#7CE6C8"];
@@ -15,28 +15,45 @@
     this._bind();
   }
 
-  WordBoard.prototype.pool = function () {
-    var size = this.size, topic = this.o.topic();
-    var ok = function (w) { return /^[a-z]{3,6}$/.test(w[0]) && w[0].length <= size; };
-    var list = topic.words.filter(ok);
-    if (list.length < 6) window.TOPICS.forEach(function (t) { if (t !== topic) t.words.filter(ok).forEach(function (w) { list.push(w); }); });
+  // Lấy từ của chủ đề theo độ dài của màn; thiếu thì nới độ dài, vẫn thiếu mới mượn chủ đề khác.
+  WordBoard.prototype.pool = function (spec, size) {
+    var topic = this.o.topic(), need = spec.count + 3;
+    var fits = function (lo, hi) { return function (w) { var n = w[0].length; return /^[a-z]+$/.test(w[0]) && n >= lo && n <= hi && n <= size; }; };
+    var lo = spec.min, hi = spec.max, list = topic.words.filter(fits(lo, hi));
+    while (list.length < need && (lo > 3 || hi < size)) {
+      if (lo > 3) lo--; else hi++;
+      list = topic.words.filter(fits(lo, hi));
+    }
+    if (list.length < need) window.TOPICS.forEach(function (t) { if (t !== topic) t.words.filter(fits(spec.min, spec.max)).forEach(function (w) { list.push(w); }); });
     return list;
   };
 
+  // Số ô mỗi cạnh: theo màn, nhưng thu nhỏ nếu bảng trên màn hình quá hẹp (mỗi ô tối thiểu khoảng 30 px)
+  WordBoard.prototype._fitSize = function (want) {
+    var w = this.el.clientWidth;
+    if (!w || w < 120) return want; // chưa dựng xong khung (màn hình ẩn) thì theo màn
+    return Math.max(6, Math.min(want, Math.floor(w / 30)));
+  };
+
   WordBoard.prototype.generate = function () {
-    var size = this.size, level = this.o.level();
+    var level = this.o.level(), spec = D.boardSpec(level);
+    var size = this.size = this._fitSize(spec.size);
     var dirs = D.boardDirs(level);
-    var want = level >= 8 ? 6 : 5;
+    var want = Math.min(spec.count, size + 1);
     var g = [], i, j;
     for (i = 0; i < size; i++) { g.push([]); for (j = 0; j < size; j++) g[i].push(""); }
-    var cand = shuffle(this.pool().slice());
-    // ưu tiên từ chưa gặp gần đây
+    var cand = shuffle(this.pool(spec, size).slice());
+    // ưu tiên từ chưa gặp gần đây; trong nhóm được chọn, đặt từ dài trước cho dễ xếp
     var recent = this.recent || [];
     cand.sort(function (a, b) { return (recent.indexOf(a[0]) >= 0) - (recent.indexOf(b[0]) >= 0); });
+    var head = cand.slice(0, want).sort(function (a, b) { return b[0].length - a[0].length; });
+    cand = head.concat(cand.slice(want));
     var placed = [];
     for (var k = 0; k < cand.length && placed.length < want; k++) {
       var w = cand[k][0];
       if (placed.some(function (p) { return p.en === w; })) continue;
+      // tránh từ nằm gọn trong từ khác (vd. "car" trong "carrot") để không bị tìm nhầm
+      if (placed.some(function (p) { return p.en.indexOf(w) >= 0 || w.indexOf(p.en) >= 0; })) continue;
       var done = false;
       for (var tries = 0; tries < 160 && !done; tries++) {
         var d = dirs[Math.floor(Math.random() * dirs.length)];
@@ -58,7 +75,7 @@
     for (i = 0; i < size; i++) for (j = 0; j < size; j++) if (!g[i][j]) g[i][j] = FILL.charAt(Math.floor(Math.random() * FILL.length));
     if (placed.length) placed[Math.floor(Math.random() * placed.length)].power = true;
     this.grid = g; this.words = placed; this.sel = []; this.anchor = null;
-    this.recent = placed.map(function (p) { return p.en; }).concat(recent).slice(0, 14);
+    this.recent = placed.map(function (p) { return p.en; }).concat(recent).slice(0, 24);
     this.render(true);
   };
 
@@ -79,8 +96,8 @@
   WordBoard.prototype.renderClues = function () {
     var showEn = this.o.showEnglish(), h = "";
     this.words.forEach(function (w) {
-      var blanks = w.found || showEn ? w.en.toUpperCase() : w.en.replace(/./g, "_ ").trim();
-      h += '<div class="clue' + (w.found ? " found" : "") + (w.power ? " power" : "") + '"><span class="ic">' + w.icon + '</span><span class="tx"><b>' + blanks + "</b><small>" + w.vi + "</small></span>" + (w.power ? '<span class="pw" title="Từ phép thuật">✦</span>' : "") + "</div>";
+      var open = w.found || showEn, blanks = open ? w.en.toUpperCase() : w.en.replace(/./g, "_");
+      h += '<div class="clue' + (w.found ? " found" : "") + (w.power ? " power" : "") + '"><span class="ic">' + w.icon + '</span><span class="tx"><b' + (open ? "" : ' class="blank"') + ">" + blanks + "</b><small>" + w.vi + "</small></span>" + (w.power ? '<span class="pw" title="Từ phép thuật">✦</span>' : "") + "</div>";
     });
     this.cluesEl.innerHTML = h;
   };

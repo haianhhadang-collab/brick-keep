@@ -67,7 +67,24 @@
   // ---------- Bảng chữ ----------
   // Điểm của chữ cái (tự đặt theo độ hiếm)
   D.LETTER_PTS = { a: 1, b: 2, c: 2, d: 2, e: 1, f: 3, g: 2, h: 3, i: 1, j: 5, k: 4, l: 1, m: 2, n: 1, o: 1, p: 2, q: 5, r: 1, s: 1, t: 1, u: 1, v: 3, w: 3, x: 5, y: 3, z: 5 };
-  D.wordGain = function (w) { var s = 0; for (var i = 0; i < w.length; i++) s += D.LETTER_PTS[w.charAt(i)] || 1; return 30 + s * 5; };
+  // Gạch nhận được: 30 + 5 × điểm chữ, từ dài hơn 4 chữ thưởng thêm 5 gạch mỗi chữ (từ khó thì được nhiều hơn)
+  D.wordGain = function (w) { var s = 0; for (var i = 0; i < w.length; i++) s += D.LETTER_PTS[w.charAt(i)] || 1; return 30 + s * 5 + Math.max(0, w.length - 4) * 5; };
+
+  // Bảng chữ theo màn: dễ → khó. size = số ô mỗi cạnh, count = số từ ẩn, min/max = độ dài từ.
+  D.BOARD_TIERS = [
+    { upTo: 2,  size: 6, count: 5, min: 3, max: 4 },
+    { upTo: 5,  size: 6, count: 6, min: 3, max: 5 },
+    { upTo: 8,  size: 7, count: 6, min: 3, max: 5 },
+    { upTo: 10, size: 7, count: 7, min: 4, max: 6 },
+    { upTo: 13, size: 8, count: 7, min: 4, max: 6 },
+    { upTo: 15, size: 8, count: 8, min: 4, max: 7 },
+    { upTo: 18, size: 9, count: 8, min: 4, max: 8 },
+    { upTo: 99, size: 9, count: 9, min: 5, max: 9 }
+  ];
+  D.boardSpec = function (level) {
+    for (var i = 0; i < D.BOARD_TIERS.length; i++) if (level <= D.BOARD_TIERS[i].upTo) return D.BOARD_TIERS[i];
+    return D.BOARD_TIERS[D.BOARD_TIERS.length - 1];
+  };
 
   // Hướng đặt từ theo cấp
   D.boardDirs = function (level) {

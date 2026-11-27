@@ -180,11 +180,11 @@ button:focus-visible { outline: 2px solid #FFE08A; outline-offset: 2px; }
 .preview.msg { font: 900 16px "Nunito", sans-serif; letter-spacing: 0; text-transform: none; color: #FFD8A0; }
 .side-btns { display: flex; gap: 6px; }
 .board-frame { padding: 8px; border-radius: 16px; background: #143A2E; border: 2px solid #0B261D; box-shadow: inset 0 0 0 1px rgba(255,255,255,.06); }
-.board { --n: 6; display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 6px; aspect-ratio: 1; width: 100%; touch-action: none; }
+.board { --n: 6; display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: calc(36px / var(--n)); aspect-ratio: 1; width: 100%; touch-action: none; }
 .board.flip .tile { animation: flipOut .35s forwards; }
-.tile { position: relative; border-radius: 10px; background: #7B7267; box-shadow: 0 3px 0 #4E473F, inset 0 1px 0 rgba(255,255,255,.15); display: grid; place-items: center; cursor: pointer; transition: background .1s, transform .1s; }
-.tile b { font: 700 clamp(18px, 2.6vw, 34px) "Fredoka", sans-serif; color: #2E2B28; text-shadow: 0 1px 0 rgba(255,255,255,.35), 0 -1px 0 rgba(0,0,0,.25); pointer-events: none; }
-.tile i { position: absolute; right: 5px; bottom: 2px; font: 600 clamp(8px, .9vw, 12px) "Fredoka"; font-style: normal; color: #2E2B28; opacity: .85; pointer-events: none; }
+.tile { position: relative; border-radius: calc(60px / var(--n, 6)); background: #7B7267; box-shadow: 0 3px 0 #4E473F, inset 0 1px 0 rgba(255,255,255,.15); display: grid; place-items: center; cursor: pointer; transition: background .1s, transform .1s; }
+.tile b { font: 700 clamp(calc(108px / var(--n, 6)), calc(15.6vw / var(--n, 6)), 34px) "Fredoka", sans-serif; color: #2E2B28; text-shadow: 0 1px 0 rgba(255,255,255,.35), 0 -1px 0 rgba(0,0,0,.25); pointer-events: none; }
+.tile i { position: absolute; right: calc(30px / var(--n, 6)); bottom: 1px; font: 600 clamp(7px, calc(5.4vw / var(--n, 6)), 12px) "Fredoka"; font-style: normal; color: #2E2B28; opacity: .85; pointer-events: none; }
 .tile.sel { background: #FBF0DC; transform: translateY(-2px) scale(1.04); box-shadow: 0 4px 0 #C9B48A, 0 0 14px rgba(255,240,200,.6); }
 .tile.found { background: var(--fc); }
 @supports (background: color-mix(in srgb, red 50%, blue)) { .tile.found { background: color-mix(in srgb, var(--fc) 55%, #7B7267); } }
@@ -203,9 +203,9 @@ button:focus-visible { outline: 2px solid #FFE08A; outline-offset: 2px; }
 .clue { min-width: 0; display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 12px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); }
 .clue .ic { font-size: 24px; flex: none; }
 .clue .tx { min-width: 0; }
-.clue b { display: block; font: 700 15px "Fredoka"; letter-spacing: 1.5px; color: #FBF0DC; white-space: nowrap; }
+.clue b { display: block; font: 700 15px "Fredoka"; letter-spacing: 1.5px; overflow: hidden; color: #FBF0DC; white-space: nowrap; }
 .clue small { display: block; font-size: 12px; font-weight: 700; color: #A9C9B4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.clue.found { background: rgba(158,224,122,.18); border-color: rgba(158,224,122,.5); }
+.clue b.blank { letter-spacing: 3px; }: rgba(158,224,122,.18); border-color: rgba(158,224,122,.5); }
 .clue.found b { color: #B8F08A; }
 .clue.power { border-color: rgba(255,216,106,.7); box-shadow: inset 0 0 14px rgba(255,210,90,.18); }
 .clue .pw { margin-left: auto; color: #FFD86A; font-size: 18px; text-shadow: 0 0 8px #FFB43A; }
@@ -238,7 +238,7 @@ button:focus-visible { outline: 2px solid #FFE08A; outline-offset: 2px; }
   .worlds { grid-template-columns: 1fr 1fr; }
   .hud-top { max-width: calc(100% - 16px); }
   .hud-right { top: auto; bottom: 8px; }
-  .tile b { font-size: clamp(16px, 5vw, 30px); }
+  .tile b { font-size: clamp(calc(96px / var(--n, 6)), calc(30vw / var(--n, 6)), 30px); }
   .coach { left: 8px; right: 8px; bottom: 96px; transform: none; max-width: none; font-size: 13.5px; padding: 8px 12px; animation: none; }
   .partner { bottom: 56px; }
 }
@@ -249,7 +249,7 @@ button:focus-visible { outline: 2px solid #FFE08A; outline-offset: 2px; }
   .big-btn { padding: 8px 14px; } .big-btn b { font-size: 17px; } .big-btn .ic { font-size: 24px; }
   .logo-vi { font-size: 14px; }
   .clue { padding: 3px 6px; } .clue .ic { font-size: 18px; } .clue b { font-size: 13px; }
-  .board { gap: 4px; } .board-frame { padding: 5px; }
+  .board { gap: calc(24px / var(--n)); } .board-frame { padding: 5px; }
   .game { grid-template-columns: 1fr clamp(260px, 34vw, 380px); }
 }
 
